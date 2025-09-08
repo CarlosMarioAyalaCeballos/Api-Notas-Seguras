@@ -18,12 +18,19 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    private static final String SECRET_KEY = "tuClaveSecretaQueDebeSer32CaracteresMin";
-    private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+    private static final String SECRET_KEY = "tuClaveSecretaMuyLargaDeAlMenos256BitsParaHMACSHA256!!!";
+    private final SecretKey key;
     private static final long ACCESS_TOKEN_VALIDITY = 15 * 60 * 1000; // 15 minutos
     private static final long REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000; // 7 días
 
+    public JwtUtil() {
+        this.key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+    }
+
     public String extractUsername(String token) {
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -65,7 +72,7 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + validity))
-                .signWith(key)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 

@@ -28,7 +28,7 @@ public class UserService {
 
         // Codificar contraseña y asignar roles
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Set.of(user.isAdmin() ? "ADMIN" : "USER")); // Quitamos el prefijo ROLE_
+        user.setRoles(Set.of(user.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER")); // Agregamos el prefijo ROLE_
         user.setFailedAttempts(0);
         user.setLockUntil(null);
 

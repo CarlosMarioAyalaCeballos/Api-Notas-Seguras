@@ -42,10 +42,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestParam String username,
+                                 @RequestParam String password,
+                                 HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(username, password)
             );
 
             final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -54,6 +56,7 @@ public class AuthController {
 
             response.addHeader(HttpHeaders.SET_COOKIE,
                 jwtUtil.generateRefreshTokenCookie(refreshToken).toString());
+            response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
 
             return ResponseEntity.ok().body(new Object() {
                 public final String token = accessToken;
