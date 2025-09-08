@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .xssProtection(xss -> xss.disable())
                 .frameOptions(frame -> frame.deny())
                 .referrerPolicy(referrer -> referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER))
+                .contentTypeOptions()
             );
 
         return http.build();
