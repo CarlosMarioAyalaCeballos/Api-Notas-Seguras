@@ -28,6 +28,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
+        // Saltar el filtro para endpoints públicos
+        String path = request.getRequestURI();
+        if (path.equals("/login") || path.equals("/auth/register")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         final String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;
@@ -38,15 +45,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 username = jwtUtil.extractUsername(jwt);
             } catch (Exception e) {
-                // Log the error but don't throw it
-                logger.error("Error processing JWT token", e);
+                // Token inválido o malformado - continuar sin autenticar
+                logger.warn("Invalid JWT token", e);
             }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-
             try {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
                 if (jwtUtil.validateToken(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
@@ -54,7 +61,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             } catch (Exception e) {
-                logger.error("Error validating JWT token", e);
+                logger.warn("Error authenticating user", e);
             }
         }
         chain.doFilter(request, response);

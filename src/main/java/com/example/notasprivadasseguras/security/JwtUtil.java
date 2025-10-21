@@ -80,7 +80,7 @@ public class JwtUtil {
         return ResponseCookie.from("refreshToken", token)
                 .httpOnly(true)
                 .secure(true)
-                .path("/api/auth/refresh")
+                .path("/auth/refresh")
                 .maxAge(REFRESH_TOKEN_VALIDITY/1000)
                 .sameSite("Strict")
                 .build();
@@ -90,7 +90,7 @@ public class JwtUtil {
         return ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
                 .secure(true)
-                .path("/api/auth/refresh")
+                .path("/auth/refresh")
                 .maxAge(0)
                 .sameSite("Strict")
                 .build();

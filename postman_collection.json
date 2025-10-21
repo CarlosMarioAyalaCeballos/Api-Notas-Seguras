@@ -1,16 +1,35 @@
 {
   "info": {
-    "_postman_id": "1234-5678-abcd-efgh",
-    "name": "Notas Privadas Seguras",
-    "description": "API segura para gestión de notas privadas",
+    "_postman_id": "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6",
+    "name": "Notas Privadas Seguras - Taller Semana 3",
+    "description": "Colección completa para probar la API de Notas Privadas Seguras con todos los requisitos del taller",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Auth",
+      "name": "1. Autenticación",
       "item": [
         {
-          "name": "Register User",
+          "name": "Register USER",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has id and email\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -21,20 +40,44 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"user@demo.com\",\n    \"password\": \"Password123\",\n    \"admin\": false\n}"
+              "raw": "{\n    \"email\": \"user@demo.com\",\n    \"password\": \"P4ssw0rd+Larga\",\n    \"admin\": false\n}"
             },
             "url": {
-              "raw": "http://localhost:8080/api/auth/register",
+              "raw": "http://localhost:8080/auth/register",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "auth", "register"]
+              "path": [
+                "auth",
+                "register"
+              ]
             },
-            "description": "Registrar usuario normal"
-          }
+            "description": "Registrar usuario normal con contraseña que cumple validación"
+          },
+          "response": []
         },
         {
-          "name": "Register Admin",
+          "name": "Register ADMIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Admin registered successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.email).to.eql(\"admin@demo.com\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -45,20 +88,45 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"admin@demo.com\",\n    \"password\": \"Password123\",\n    \"admin\": true\n}"
+              "raw": "{\n    \"email\": \"admin@demo.com\",\n    \"password\": \"P4ssw0rd+Larga\",\n    \"admin\": true\n}"
             },
             "url": {
-              "raw": "http://localhost:8080/api/auth/register",
+              "raw": "http://localhost:8080/auth/register",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "auth", "register"]
+              "path": [
+                "auth",
+                "register"
+              ]
             },
-            "description": "Registrar usuario administrador"
-          }
+            "description": "Registrar usuario administrador con rol ADMIN"
+          },
+          "response": []
         },
         {
-          "name": "Login",
+          "name": "Login USER",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains token\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('token');",
+                  "    pm.environment.set(\"user_token\", jsonData.token);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -72,49 +140,259 @@
               "urlencoded": [
                 {
                   "key": "username",
-                  "value": "user@demo.com"
+                  "value": "user@demo.com",
+                  "type": "text"
                 },
                 {
                   "key": "password",
-                  "value": "Password123"
+                  "value": "P4ssw0rd+Larga",
+                  "type": "text"
                 }
               ]
             },
             "url": {
-              "raw": "http://localhost:8080/api/auth/login",
+              "raw": "http://localhost:8080/login",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "auth", "login"]
-            }
-          }
+              "path": [
+                "login"
+              ]
+            },
+            "description": "Login con form-urlencoded. Guarda el token en variable user_token"
+          },
+          "response": []
         },
         {
-          "name": "Get Profile",
+          "name": "Login ADMIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains token\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('token');",
+                  "    pm.environment.set(\"admin_token\", jsonData.token);",
+                  "});",
+                  "",
+                  "pm.test(\"Headers contain security headers\", function () {",
+                  "    pm.response.to.have.header('Content-Security-Policy');",
+                  "    pm.response.to.have.header('Strict-Transport-Security');",
+                  "    pm.response.to.have.header('X-Content-Type-Options');",
+                  "    pm.response.to.have.header('Referrer-Policy');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "admin@demo.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "P4ssw0rd+Larga",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "login"
+              ]
+            },
+            "description": "Login admin. Guarda token y verifica cabeceras de seguridad"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile (USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Profile has email and roles\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "    pm.expect(jsonData).to.have.property('roles');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{user_token}}"
               }
             ],
             "url": {
-              "raw": "http://localhost:8080/api/auth/me",
+              "raw": "http://localhost:8080/auth/me",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "auth", "me"]
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Obtener perfil del usuario autenticado"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Admin has ADMIN role\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.roles).to.include('ADMIN');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
             }
-          }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/auth/me",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Verificar que el perfil admin tiene rol ADMIN"
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/auth/refresh",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            },
+            "description": "Renovar access token usando la cookie refreshToken"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/auth/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Cerrar sesión y limpiar cookie refreshToken"
+          },
+          "response": []
         }
       ]
     },
     {
-      "name": "Notes",
+      "name": "2. Notas",
       "item": [
         {
           "name": "Create Note",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Note created with ID\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.environment.set(\"note_id\", jsonData.id);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -124,7 +402,7 @@
               },
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{user_token}}"
               }
             ],
             "body": {
@@ -132,32 +410,62 @@
               "raw": "{\n    \"title\": \"Mi primera nota\",\n    \"content\": \"Contenido secreto\"\n}"
             },
             "url": {
-              "raw": "http://localhost:8080/api/notes",
+              "raw": "http://localhost:8080/notes",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "notes"]
-            }
-          }
+              "path": [
+                "notes"
+              ]
+            },
+            "description": "Crear nota como USER"
+          },
+          "response": []
         },
         {
           "name": "Get All My Notes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{user_token}}"
               }
             ],
             "url": {
-              "raw": "http://localhost:8080/api/notes",
+              "raw": "http://localhost:8080/notes",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "notes"]
-            }
-          }
+              "path": [
+                "notes"
+              ]
+            },
+            "description": "Listar solo mis notas"
+          },
+          "response": []
         },
         {
           "name": "Get Note by ID",
@@ -166,17 +474,24 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{user_token}}"
               }
             ],
             "url": {
-              "raw": "http://localhost:8080/api/notes/1",
+              "raw": "http://localhost:8080/notes/{{note_id}}",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "notes", "1"]
-            }
-          }
+              "path": [
+                "notes",
+                "{{note_id}}"
+              ]
+            },
+            "description": "Obtener una nota específica"
+          },
+          "response": []
         },
         {
           "name": "Update Note",
@@ -189,7 +504,7 @@
               },
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{user_token}}"
               }
             ],
             "body": {
@@ -197,13 +512,20 @@
               "raw": "{\n    \"title\": \"Nota actualizada\",\n    \"content\": \"Nuevo contenido\"\n}"
             },
             "url": {
-              "raw": "http://localhost:8080/api/notes/1",
+              "raw": "http://localhost:8080/notes/{{note_id}}",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "notes", "1"]
-            }
-          }
+              "path": [
+                "notes",
+                "{{note_id}}"
+              ]
+            },
+            "description": "Actualizar una nota mía"
+          },
+          "response": []
         },
         {
           "name": "Delete Note",
@@ -212,43 +534,374 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{user_token}}"
               }
             ],
             "url": {
-              "raw": "http://localhost:8080/api/notes/1",
+              "raw": "http://localhost:8080/notes/{{note_id}}",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "notes", "1"]
-            }
-          }
+              "path": [
+                "notes",
+                "{{note_id}}"
+              ]
+            },
+            "description": "Eliminar una nota"
+          },
+          "response": []
         }
       ]
     },
     {
-      "name": "Admin",
+      "name": "3. Admin",
       "item": [
         {
-          "name": "Get All Users",
+          "name": "Get All Users (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Returns list of users\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{admin_token}}"
               }
             ],
             "url": {
-              "raw": "http://localhost:8080/api/admin/users",
+              "raw": "http://localhost:8080/admin/users",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "admin", "users"]
+              "path": [
+                "admin",
+                "users"
+              ]
+            },
+            "description": "Listar todos los usuarios - solo ADMIN"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users (USER - Should Fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
             }
-          }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/admin/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "admin",
+                "users"
+              ]
+            },
+            "description": "Debe devolver 403 Forbidden"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Lockout Tests",
+      "item": [
+        {
+          "name": "Login Failed 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "test@lockout.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "wrong1",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Failed 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "test@lockout.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "wrong2",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Failed 3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "test@lockout.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "wrong3",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Failed 4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "test@lockout.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "wrong4",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Failed 5",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "test@lockout.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "wrong5",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Failed 6 (Should Lock)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Account locked\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "test@lockout.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "wrong6",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
   ]
 }
+

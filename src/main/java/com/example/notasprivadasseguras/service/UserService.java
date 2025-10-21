@@ -26,9 +26,9 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El email ya está registrado");
         }
 
-        // Codificar contraseña y asignar roles
+        // Codificar contraseña y asignar roles (sin prefijo ROLE_, ya que .roles() lo añade automáticamente)
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Set.of(user.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER")); // Agregamos el prefijo ROLE_
+        user.setRoles(Set.of(user.isAdmin() ? "ADMIN" : "USER"));
         user.setFailedAttempts(0);
         user.setLockUntil(null);
 

@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/notes") // Actualizado para coincidir con el esquema de rutas
+@RequestMapping("/notes")
 public class NoteController {
     private final NoteService notes;
     private final UserRepository users;
